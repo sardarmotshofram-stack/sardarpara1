@@ -1,1 +1,1193 @@
+<!doctype html>
+<html lang="bn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>মালি বাড়ি সরদারপাড়া জামে মসজিদ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        background: #0a2e0a;
+        font-family: 'Noto Sans Bengali', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+      .app-container {
+        max-width: 480px;
+        margin: 0 auto;
+        min-height: 100vh;
+        background: linear-gradient(180deg, #0a2e0a 0%, #0d3d0d 40%, #081a08 100%);
+        position: relative;
+        overflow-x: hidden;
+      }
 
+      /* ── Header ── */
+      .header {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #0d3d0d 0%, #1a5c1a 50%, #0d3d0d 100%);
+        padding: 16px 20px 20px;
+      }
+      .header::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse at top center, rgba(212,175,55,0.1) 0%, transparent 70%);
+      }
+      .header::after {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, #d4af37 30%, #b8860b 50%, #d4af37 70%, transparent 100%);
+      }
+      .header-inner {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+      }
+      .header-badges {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+      }
+      .badge {
+        background: rgba(212,175,55,0.15);
+        color: #d4af37;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        border: 1px solid rgba(212,175,55,0.3);
+      }
+      .badge .dot {
+        width: 6px; height: 6px;
+        background: #d4af37;
+        border-radius: 50%;
+        animation: pulse 2s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(0.8); }
+      }
+      .mosque-icon {
+        font-size: 52px;
+        margin-bottom: 10px;
+        filter: drop-shadow(0 0 15px rgba(212,175,55,0.4));
+        animation: float 3s ease-in-out infinite;
+      }
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-6px); }
+      }
+      .mosque-name {
+        font-size: 24px;
+        font-weight: 800;
+        background: linear-gradient(135deg, #d4af37 0%, #f0d060 30%, #d4af37 60%, #b8860b 100%);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shimmer 4s linear infinite;
+        margin-bottom: 4px;
+        line-height: 1.3;
+      }
+      @keyframes shimmer {
+        0% { background-position: 0% center; }
+        100% { background-position: 200% center; }
+      }
+      .mosque-sub {
+        color: #8fbc8f;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 2px;
+      }
+      .mosque-addr {
+        color: #4a7c4a;
+        font-size: 12px;
+        margin-bottom: 4px;
+      }
+      .mosque-date {
+        color: #3a6b3a;
+        font-size: 11px;
+      }
+      .header-divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.5) 50%, transparent 100%);
+        margin-top: 16px;
+      }
+
+      /* ── Announcement ── */
+      .announcement {
+        margin: 16px;
+        background: linear-gradient(135deg, rgba(26,58,26,0.9) 0%, rgba(13,61,13,0.9) 100%);
+        border: 1px solid rgba(212,175,55,0.25);
+        border-radius: 20px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        position: relative;
+        overflow: hidden;
+      }
+      .announcement::before {
+        content: '';
+        position: absolute;
+        top: 0; right: 0;
+        width: 80px; height: 80px;
+        background: radial-gradient(circle, rgba(212,175,55,0.06) 0%, transparent 70%);
+        border-radius: 0 0 0 100%;
+      }
+      .announcement-icon {
+        font-size: 24px;
+        flex-shrink: 0;
+      }
+      .announcement-text h4 {
+        color: #8fbc8f;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 3px;
+      }
+      .announcement-text p {
+        color: #6a9a6a;
+        font-size: 12px;
+        line-height: 1.5;
+      }
+      .announcement-close {
+        position: absolute;
+        top: 8px; right: 10px;
+        background: none;
+        border: none;
+        color: #4a7c4a;
+        font-size: 18px;
+        cursor: pointer;
+        padding: 4px;
+        line-height: 1;
+        transition: color 0.2s;
+      }
+      .announcement-close:hover { color: #8fbc8f; }
+
+      /* ── Bkash Card ── */
+      .bkash-card {
+        margin: 0 16px 16px;
+        background: linear-gradient(160deg, rgba(26,46,26,0.9) 0%, rgba(42,74,42,0.7) 50%, rgba(26,58,26,0.9) 100%);
+        border: 1px solid rgba(212,175,55,0.35);
+        border-radius: 24px;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+      }
+      .bkash-card::before {
+        content: '';
+        position: absolute;
+        top: -20px; left: -20px;
+        width: 100px; height: 100px;
+        background: rgba(212,175,55,0.04);
+        border-radius: 50%;
+      }
+      .bkash-card::after {
+        content: '';
+        position: absolute;
+        bottom: -15px; right: -15px;
+        width: 80px; height: 80px;
+        background: rgba(212,175,55,0.04);
+        border-radius: 50%;
+      }
+      .bkash-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+        position: relative;
+        z-index: 1;
+      }
+      .bkash-icon {
+        width: 44px; height: 44px;
+        background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        box-shadow: 0 4px 15px rgba(212,175,55,0.3);
+      }
+      .bkash-title {
+        color: #d4af37;
+        font-size: 18px;
+        font-weight: 700;
+      }
+      .bkash-inner {
+        background: rgba(10,46,10,0.7);
+        border-radius: 18px;
+        padding: 16px;
+        border: 1px solid rgba(212,175,55,0.2);
+        position: relative;
+        z-index: 1;
+      }
+      .bkash-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+      .bkash-row:last-of-type { margin-bottom: 0; }
+      .bkash-phone-icon {
+        width: 44px; height: 44px;
+        background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        box-shadow: 0 4px 12px rgba(212,175,55,0.25);
+        flex-shrink: 0;
+      }
+      .bkash-label {
+        color: #8fbc8f;
+        font-size: 11px;
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+      .bkash-number {
+        color: white;
+        font-size: 20px;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+      }
+      .bkash-btn {
+        display: block;
+        width: 100%;
+        background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+        color: #0a2e0a;
+        font-family: 'Noto Sans Bengali', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        border: none;
+        border-radius: 14px;
+        padding: 14px;
+        text-align: center;
+        cursor: pointer;
+        box-shadow: 0 4px 20px rgba(212,175,55,0.35);
+        transition: all 0.2s;
+        position: relative;
+        z-index: 1;
+        margin-top: 14px;
+      }
+      .bkash-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 25px rgba(212,175,55,0.45);
+      }
+      .bkash-btn:active {
+        transform: translateY(1px) scale(0.98);
+      }
+
+      /* ── Prayer Times ── */
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 20px 16px 14px;
+      }
+      .section-icon {
+        width: 36px; height: 36px;
+        background: linear-gradient(135deg, rgba(212,175,55,0.2) 0%, rgba(184,134,11,0.2) 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        border: 1px solid rgba(212,175,55,0.3);
+      }
+      .section-title h2 {
+        color: #d4af37;
+        font-size: 18px;
+        font-weight: 700;
+      }
+      .section-count {
+        color: #4a7c4a;
+        font-size: 12px;
+        font-weight: 500;
+        background: rgba(212,175,55,0.1);
+        padding: 3px 10px;
+        border-radius: 12px;
+        border: 1px solid rgba(212,175,55,0.2);
+      }
+      .prayer-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+        padding: 0 16px 16px;
+      }
+      .prayer-item {
+        text-align: center;
+        background: rgba(10,46,10,0.65);
+        border-radius: 14px;
+        padding: 12px 6px;
+        border: 1px solid rgba(212,175,55,0.12);
+        transition: all 0.3s;
+        cursor: default;
+      }
+      .prayer-item:hover {
+        border-color: rgba(212,175,55,0.4);
+        background: rgba(26,74,26,0.6);
+        transform: translateY(-2px);
+      }
+      .prayer-emoji {
+        font-size: 24px;
+        margin-bottom: 6px;
+        display: block;
+      }
+      .prayer-name {
+        color: white;
+        font-size: 11px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .prayer-time {
+        color: #d4af37;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      /* ── Officials ── */
+      .officials-list {
+        padding: 0 16px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .official-card {
+        background: linear-gradient(135deg, rgba(13,61,13,0.8) 0%, rgba(10,46,10,0.8) 100%);
+        border: 1px solid rgba(212,175,55,0.2);
+        border-radius: 20px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        transition: all 0.3s;
+        cursor: default;
+        position: relative;
+        overflow: hidden;
+      }
+      .official-card::before {
+        content: '';
+        position: absolute;
+        top: 0; right: 0;
+        width: 60px; height: 60px;
+        background: radial-gradient(circle, rgba(212,175,55,0.06) 0%, transparent 70%);
+        border-radius: 0 0 0 100%;
+      }
+      .official-card:hover {
+        border-color: rgba(212,175,55,0.45);
+        transform: translateX(4px);
+      }
+      .official-avatar {
+        width: 56px; height: 56px;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        flex-shrink: 0;
+        position: relative;
+        z-index: 1;
+      }
+      .official-info {
+        flex: 1;
+        min-width: 0;
+        position: relative;
+        z-index: 1;
+      }
+      .official-name {
+        color: white;
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 3px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .official-role {
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 4px;
+        background: linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(184,134,11,0.15) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 8px;
+        border: 1px solid rgba(212,175,55,0.2);
+      }
+      .official-phone {
+        color: #4a7c4a;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .official-phone span {
+        color: #8fbc8f;
+        font-weight: 600;
+      }
+      .official-action {
+        width: 38px; height: 38px;
+        background: rgba(212,175,55,0.15);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #d4af37;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.2s;
+        flex-shrink: 0;
+        position: relative;
+        z-index: 1;
+        border: 1px solid rgba(212,175,55,0.2);
+      }
+      .official-action:hover {
+        background: rgba(212,175,55,0.3);
+        transform: scale(1.1);
+      }
+
+      /* ── Quick Contact ── */
+      .contact-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        padding: 0 16px 16px;
+      }
+      .contact-btn {
+        background: linear-gradient(135deg, var(--ct-from) 0%, var(--ct-to) 100%);
+        border-radius: 20px;
+        padding: 16px 12px;
+        text-align: center;
+        color: white;
+        text-decoration: none;
+        display: block;
+        box-shadow: 0 4px 15px rgba(212,175,55,0.1);
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+      }
+      .contact-btn::before {
+        content: '';
+        position: absolute;
+        top: -50%; right: -50%;
+        width: 100px; height: 100px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 50%;
+        transition: all 0.3s;
+      }
+      .contact-btn:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 8px 25px rgba(212,175,55,0.25);
+      }
+      .contact-btn:hover::before {
+        top: -30%; right: -30%;
+      }
+      .contact-btn:active {
+        transform: translateY(0) scale(0.98);
+      }
+      .contact-emoji {
+        font-size: 30px;
+        margin-bottom: 6px;
+        display: block;
+      }
+      .contact-role {
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 3px;
+        opacity: 0.9;
+      }
+      .contact-name {
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .contact-call {
+        background: rgba(255,255,255,0.2);
+        border-radius: 12px;
+        padding: 5px 12px;
+        font-size: 11px;
+        font-weight: 600;
+        display: inline-block;
+      }
+
+      /* ── Mosque Info ── */
+      .info-card {
+        margin: 0 16px 16px;
+        background: rgba(13,61,13,0.6);
+        border: 1px solid rgba(212,175,55,0.2);
+        border-radius: 20px;
+        padding: 16px;
+      }
+      .info-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(212,175,55,0.1);
+      }
+      .info-item:last-child { border-bottom: none; }
+      .info-icon {
+        font-size: 20px;
+        flex-shrink: 0;
+        width: 32px;
+        text-align: center;
+      }
+      .info-title {
+        color: #8fbc8f;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+      .info-desc {
+        color: #4a7c4a;
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      /* ── Footer ── */
+      .footer {
+        background: rgba(8,26,8,0.9);
+        border-top: 1px solid rgba(212,175,55,0.2);
+        padding: 20px 16px;
+        text-align: center;
+      }
+      .footer-stars {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 12px;
+        font-size: 20px;
+        opacity: 0.4;
+      }
+      .footer-name {
+        color: #4a7c4a;
+        font-size: 13px;
+        margin-bottom: 4px;
+      }
+      .footer-addr {
+        color: #3a6b3a;
+        font-size: 11px;
+        margin-bottom: 12px;
+      }
+      .footer-badge {
+        background: linear-gradient(135deg, rgba(212,175,55,0.1) 0%, rgba(212,175,55,0.2) 50%, rgba(212,175,55,0.1) 100%);
+        border: 1px solid rgba(212,175,55,0.3);
+        border-radius: 14px;
+        padding: 10px 16px;
+        display: inline-block;
+        margin-bottom: 12px;
+      }
+      .footer-badge p {
+        color: #d4af37;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .footer-badge span {
+        color: #4a7c4a;
+        font-size: 11px;
+        display: block;
+        margin-top: 2px;
+      }
+      .footer-copy {
+        color: #2a5a2a;
+        font-size: 11px;
+      }
+
+      /* ── Modal ── */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.85);
+        backdrop-filter: blur(8px);
+        z-index: 100;
+        display: none;
+        align-items: flex-end;
+        justify-content: center;
+      }
+      .modal-overlay.active {
+        display: flex;
+      }
+      .modal-content {
+        background: linear-gradient(180deg, #0d3d0d 0%, #081a08 100%);
+        width: 100%;
+        max-width: 480px;
+        border-radius: 28px 28px 0 0;
+        padding: 24px;
+        animation: slideUp 0.35s ease-out;
+        max-height: 85vh;
+        overflow-y: auto;
+      }
+      @keyframes slideUp {
+        from { transform: translateY(100%); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+      .modal-handle {
+        width: 40px; height: 4px;
+        background: rgba(212,175,55,0.4);
+        border-radius: 4px;
+        margin: 0 auto 16px;
+      }
+      .modal-close {
+        position: absolute;
+        top: 16px; right: 20px;
+        width: 36px; height: 36px;
+        background: rgba(212,175,55,0.15);
+        border: 1px solid rgba(212,175,55,0.3);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #d4af37;
+        font-size: 18px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .modal-close:hover {
+        background: rgba(212,175,55,0.3);
+        transform: rotate(90deg);
+      }
+      .modal-avatar {
+        width: 80px; height: 80px;
+        border-radius: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 38px;
+        margin: 0 auto 16px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+      }
+      .modal-name {
+        text-align: center;
+        color: white;
+        font-size: 24px;
+        font-weight: 800;
+        margin-bottom: 6px;
+      }
+      .modal-role {
+        text-align: center;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 16px;
+        background: linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(184,134,11,0.15) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+        padding: 4px 16px;
+        border-radius: 10px;
+        border: 1px solid rgba(212,175,55,0.2);
+        width: 100%;
+        text-align: center;
+      }
+      .modal-bio {
+        background: rgba(10,46,10,0.7);
+        border-radius: 18px;
+        padding: 16px;
+        margin-bottom: 16px;
+        border: 1px solid rgba(212,175,55,0.15);
+      }
+      .modal-bio p {
+        color: #8fbc8f;
+        font-size: 14px;
+        line-height: 1.8;
+      }
+      .modal-details {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      .modal-detail {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: rgba(10,46,10,0.6);
+        border-radius: 14px;
+        padding: 12px 14px;
+        border: 1px solid rgba(212,175,55,0.12);
+      }
+      .modal-detail-icon {
+        font-size: 20px;
+        width: 36px;
+        text-align: center;
+      }
+      .modal-detail-label {
+        color: #4a7c4a;
+        font-size: 11px;
+      }
+      .modal-detail-value {
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .modal-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .modal-btn {
+        border-radius: 18px;
+        padding: 16px;
+        text-align: center;
+        font-family: 'Noto Sans Bengali', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        text-decoration: none;
+        display: block;
+        transition: all 0.2s;
+        cursor: pointer;
+        border: none;
+      }
+      .modal-btn:hover {
+        transform: translateY(-2px);
+      }
+      .modal-btn:active {
+        transform: translateY(0) scale(0.98);
+      }
+      .modal-btn-call {
+        background: linear-gradient(135deg, var(--ct-from) 0%, var(--ct-to) 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(212,175,55,0.2);
+      }
+      .modal-btn-wa {
+        background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+        color: #0a2e0a;
+        box-shadow: 0 4px 15px rgba(212,175,55,0.3);
+      }
+
+      /* ── Glow Animation ── */
+      .glow-gold {
+        animation: glowGold 3s ease-in-out infinite;
+      }
+      @keyframes glowGold {
+        0%, 100% { box-shadow: 0 0 10px rgba(212,175,55,0.2), 0 0 20px rgba(212,175,55,0.1); }
+        50% { box-shadow: 0 0 20px rgba(212,175,55,0.4), 0 0 40px rgba(212,175,55,0.2); }
+      }
+
+      /* ── Scrollbar ── */
+      ::-webkit-scrollbar { width: 4px; }
+      ::-webkit-scrollbar-track { background: rgba(10,46,10,0.3); }
+      ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #d4af37 0%, #b8860b 100%); border-radius: 4px; }
+
+      /* ── Responsive ── */
+      @media (max-width: 480px) {
+        .app-container { max-width: 100%; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-container">
+
+      <!-- ── Header ── -->
+      <div class="header">
+        <div class="header-inner">
+          <div class="header-badges">
+            <div class="badge"><span class="dot"></span> পাবলিক ভিউ</div>
+            <div class="badge"><span class="dot"></span> 🕌 জামে মসজিদ</div>
+          </div>
+          <div class="mosque-icon">🕌</div>
+          <h1 class="mosque-name">মালি বাড়ি সরদারপাড়া জামে মসজিদ</h1>
+          <p class="mosque-sub">মৌজা মালি বাড়ি সরদারপাড়া</p>
+          <p class="mosque-addr">গাইবান্ধা সদর, ১ নং লক্ষীপুর</p>
+          <p class="mosque-date" id="headerDate"></p>
+        </div>
+        <div class="header-divider"></div>
+      </div>
+
+      <!-- ── Announcement ── -->
+      <div class="announcement" id="announcement">
+        <span class="announcement-icon">📢</span>
+        <div class="announcement-text">
+          <h4>আজকের ঘোষণা</h4>
+          <p>শুক্রবারের জুমার নামাজ জামাতে আদায় করুন। চাঁদা প্রদানে সহযোগিতা করুন।</p>
+        </div>
+        <button class="announcement-close" onclick="document.getElementById('announcement').style.display='none'">✕</button>
+      </div>
+
+      <!-- ── Bkash Donation ── -->
+      <div class="bkash-card glow-gold">
+        <div class="bkash-header">
+          <div class="bkash-icon">💰</div>
+          <h2 class="bkash-title">মসজিদ চাঁদা প্রদান</h2>
+        </div>
+        <div class="bkash-inner">
+          <div class="bkash-row">
+            <div class="bkash-phone-icon">💳</div>
+            <div>
+              <p class="bkash-label">বিকাশ (মার্চেন্ট)</p>
+              <p class="bkash-number">০১৭১৩-৯২৮০২৪</p>
+            </div>
+          </div>
+          <a href="https://play.google.com/store/apps/details?id=com.bkash.android" target="_blank" rel="noopener noreferrer">
+            <button class="bkash-btn">📱 বিকাশে চাঁদা দিন</button>
+          </a>
+        </div>
+      </div>
+
+      <!-- ── Prayer Times ── -->
+      <div class="section-title">
+        <div class="section-icon">🕋</div>
+        <h2>নামাজের সময়সূচি</h2>
+        <span class="section-count">আজ</span>
+      </div>
+      <div class="prayer-grid">
+        <div class="prayer-item">
+          <span class="prayer-emoji">🌅</span>
+          <p class="prayer-name">ফজর</p>
+          <p class="prayer-time">০৪:৩৫</p>
+        </div>
+        <div class="prayer-item">
+          <span class="prayer-emoji">☀️</span>
+          <p class="prayer-name">যোহর</p>
+          <p class="prayer-time">১২:১৫</p>
+        </div>
+        <div class="prayer-item">
+          <span class="prayer-emoji">🌤️</span>
+          <p class="prayer-name">আসর</p>
+          <p class="prayer-time">০৩:৪৫</p>
+        </div>
+        <div class="prayer-item">
+          <span class="prayer-emoji">🌇</span>
+          <p class="prayer-name">মাগরিব</p>
+          <p class="prayer-time">০৬:২০</p>
+        </div>
+        <div class="prayer-item">
+          <span class="prayer-emoji">🌙</span>
+          <p class="prayer-name">ইশা</p>
+          <p class="prayer-time">০৭:৪৫</p>
+        </div>
+      </div>
+
+      <!-- ── Officials ── -->
+      <div class="section-title">
+        <div class="section-icon">👥</div>
+        <h2>পরিচালনা পর্ষদ</h2>
+        <span class="section-count">৪ জন</span>
+      </div>
+      <div class="officials-list">
+
+        <!-- সভাপতি -->
+        <div class="official-card" style="--ct-from: #10b981; --ct-to: #059669;" onclick="openModal(0)">
+          <div class="official-avatar" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+            🏛️
+          </div>
+          <div class="official-info">
+            <p class="official-name">আবদুল কুদ্দুস সর্দার</p>
+            <span class="official-role">সভাপতি</span>
+            <p class="official-phone">📞 <span>০১৭-২৭৫-৯১৬৩৩</span></p>
+          </div>
+          <div class="official-action">👁️</div>
+        </div>
+
+        <!-- সাধারণ সম্পাদক -->
+        <div class="official-card" style="--ct-from: #14b8a6; --ct-to: #0d9488;" onclick="openModal(1)">
+          <div class="official-avatar" style="background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);">
+            📋
+          </div>
+          <div class="official-info">
+            <p class="official-name">মাওলানা মুত্তালিব হোসেন</p>
+            <span class="official-role">সাধারণ সম্পাদক</span>
+            <p class="official-phone">📞 <span>০১৭-২২৩-৩৯৯১০</span></p>
+          </div>
+          <div class="official-action">👁️</div>
+        </div>
+
+        <!-- ক্যাশিয়ার -->
+        <div class="official-card" style="--ct-from: #f59e0b; --ct-to: #d97706;" onclick="openModal(2)">
+          <div class="official-avatar" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+            💰
+          </div>
+          <div class="official-info">
+            <p class="official-name">আবদুর রউফ সর্দার</p>
+            <span class="official-role">ক্যাশিয়ার</span>
+            <p class="official-phone">📞 <span>০১৭৪২-৩২৪২৪৭</span></p>
+          </div>
+          <div class="official-action">👁️</div>
+        </div>
+
+        <!-- খতিব -->
+        <div class="official-card" style="--ct-from: #8b5cf6; --ct-to: #7c3aed;" onclick="openModal(3)">
+          <div class="official-avatar" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+            📖
+          </div>
+          <div class="official-info">
+            <p class="official-name">মাওলানা মো: কারী মোজাফফর হোসেন</p>
+            <span class="official-role">খতিব</span>
+            <p class="official-phone">📞 মসজিদে যোগাযোগ করুন</p>
+          </div>
+          <div class="official-action">👁️</div>
+        </div>
+
+      </div>
+
+      <!-- ── Quick Contact ── -->
+      <div class="section-title">
+        <div class="section-icon">📞</div>
+        <h2>দ্রুত যোগাযোগ</h2>
+      </div>
+      <div class="contact-grid">
+        <a href="tel:01727591633" class="contact-btn" style="--ct-from: #10b981; --ct-to: #059669;">
+          <span class="contact-emoji">🏛️</span>
+          <p class="contact-role">সভাপতি</p>
+          <p class="contact-name">আবদুল কুদ্দুস সর্দার</p>
+          <span class="contact-call">📞 কল করুন</span>
+        </a>
+        <a href="tel:01722339910" class="contact-btn" style="--ct-from: #14b8a6; --ct-to: #0d9488;">
+          <span class="contact-emoji">📋</span>
+          <p class="contact-role">সা. সম্পাদক</p>
+          <p class="contact-name">মাওলানা মুত্তালিব হোসেন</p>
+          <span class="contact-call">📞 কল করুন</span>
+        </a>
+        <a href="tel:01742324247" class="contact-btn" style="--ct-from: #f59e0b; --ct-to: #d97706;">
+          <span class="contact-emoji">💰</span>
+          <p class="contact-role">ক্যাশিয়ার</p>
+          <p class="contact-name">আবদুর রউফ সর্দার</p>
+          <span class="contact-call">📞 কল করুন</span>
+        </a>
+        <a href="tel:01700000000" class="contact-btn" style="--ct-from: #8b5cf6; --ct-to: #7c3aed;">
+          <span class="contact-emoji">📖</span>
+          <p class="contact-role">খতিব</p>
+          <p class="contact-name">মাওলানা কারী মোজাফফর</p>
+          <span class="contact-call">📞 কল করুন</span>
+        </a>
+      </div>
+
+      <!-- ── Mosque Info ── -->
+      <div class="section-title">
+        <div class="section-icon">🏗️</div>
+        <h2>মসজিদের তথ্য</h2>
+      </div>
+      <div class="info-card">
+        <div class="info-item">
+          <span class="info-icon">📍</span>
+          <div>
+            <p class="info-title">মালি বাড়ি সরদারপাড়া জামে মসজিদ</p>
+            <p class="info-desc">মৌজা মালি বাড়ি সরদারপাড়া, গাইবান্ধা সদর, ১ নং লক্ষীপুর</p>
+          </div>
+        </div>
+        <div class="info-item">
+          <span class="info-icon">📅</span>
+          <div>
+            <p class="info-title">প্রতিষ্ঠাকাল</p>
+            <p class="info-desc">১৯৮৫ সাল</p>
+          </div>
+        </div>
+        <div class="info-item">
+          <span class="info-icon">📐</span>
+          <div>
+            <p class="info-title">ধারণক্ষমতা</p>
+            <p class="info-desc">৫০০+ মুসল্লি</p>
+          </div>
+        </div>
+        <div class="info-item">
+          <span class="info-icon">🏫</span>
+          <div>
+            <p class="info-title">মাদ্রাসা/কিতাবখানা</p>
+            <p class="info-desc">নারী-পুরুষ আলাদা মকতব চালু আছে</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Footer ── -->
+      <div class="footer">
+        <div class="footer-stars">✦ 🕌 ✦</div>
+        <p class="footer-name">🕌 মালি বাড়ি সরদারপাড়া জামে মসজিদ পরিচালনা পর্ষদ</p>
+        <p class="footer-addr">গাইবান্ধা সদর, লক্ষীপুর</p>
+        <div class="footer-badge">
+          <p>🛡️ ওয়েবসাইট — পাবলিক ভিউ</p>
+          <span>© ২০২৫ সর্বস্বত্ব সংরক্ষিত</span>
+        </div>
+        <p class="footer-copy">© ২০২৫ সর্বস্বত্ব সংরক্ষিত</p>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════════════ -->
+    <!-- ─── MODALS ─── -->
+    <!-- ═══════════════════════ -->
+
+    <!-- সভাপতি Modal -->
+    <div class="modal-overlay" id="modal-0" onclick="closeModal(event, 0)">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-handle"></div>
+        <button class="modal-close" onclick="closeModalDirect(0)">✕</button>
+        <div class="modal-avatar" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">🏛️</div>
+        <h3 class="modal-name">আবদুল কুদ্দুস সর্দার</h3>
+        <p class="modal-role">সভাপতি • মালি বাড়ি সরদারপাড়া জামে মসজিদ</p>
+        <div class="modal-bio">
+          <p>মালি বাড়ি সরদারপাড়া জামে মসজিদের সভাপতি। মসজিদ পরিচালনা পর্ষদের নেতৃত্ব প্রদান করছেন। মসজিদের উন্নয়নে সর্বদা সচেষ্ট।</p>
+        </div>
+        <div class="modal-details">
+          <div class="modal-detail">
+            <span class="modal-detail-icon">📞</span>
+            <div>
+              <p class="modal-detail-label">মোবাইল নম্বর</p>
+              <p class="modal-detail-value">০১৭-২৭৫-৯১৬৩৩</p>
+            </div>
+          </div>
+          <div class="modal-detail">
+            <span class="modal-detail-icon">📍</span>
+            <div>
+              <p class="modal-detail-label">ঠিকানা</p>
+              <p class="modal-detail-value">মৌজা মালি বাড়ি সরদারপাড়া, গাইবান্ধা সদর, লক্ষীপুর</p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <a href="tel:01727591633" class="modal-btn modal-btn-call">📞 ফোন করুন</a>
+          <a href="https://wa.me/8801727591633" class="modal-btn modal-btn-wa" target="_blank">💬 হোয়াটসঅ্যাপ</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- সাধারণ সম্পাদক Modal -->
+    <div class="modal-overlay" id="modal-1" onclick="closeModal(event, 1)">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-handle"></div>
+        <button class="modal-close" onclick="closeModalDirect(1)">✕</button>
+        <div class="modal-avatar" style="background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);">📋</div>
+        <h3 class="modal-name">মাওলানা মুত্তালিব হোসেন</h3>
+        <p class="modal-role">সাধারণ সম্পাদক • মালি বাড়ি সরদারপাড়া জামে মসজিদ</p>
+        <div class="modal-bio">
+          <p>মসজিদ পরিচালনা পর্ষদের সাধারণ সম্পাদক। মসজিদের দৈনন্দিন কার্যক্রম পরিচালনা ও সমন্বয় করেন।</p>
+        </div>
+        <div class="modal-details">
+          <div class="modal-detail">
+            <span class="modal-detail-icon">📞</span>
+            <div>
+              <p class="modal-detail-label">মোবাইল নম্বর</p>
+              <p class="modal-detail-value">০১৭-২২৩-৩৯৯১০</p>
+            </div>
+          </div>
+          <div class="modal-detail">
+            <span class="modal-detail-icon">📍</span>
+            <div>
+              <p class="modal-detail-label">ঠিকানা</p>
+              <p class="modal-detail-value">মৌজা মালি বাড়ি সরদারপাড়া, গাইবান্ধা সদর, লক্ষীপুর</p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <a href="tel:01722339910" class="modal-btn modal-btn-call">📞 ফোন করুন</a>
+          <a href="https://wa.me/8801722339910" class="modal-btn modal-btn-wa" target="_blank">💬 হোয়াটসঅ্যাপ</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ক্যাশিয়ার Modal -->
+    <div class="modal-overlay" id="modal-2" onclick="closeModal(event, 2)">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-handle"></div>
+        <button class="modal-close" onclick="closeModalDirect(2)">✕</button>
+        <div class="modal-avatar" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">💰</div>
+        <h3 class="modal-name">আবদুর রউফ সর্দার</h3>
+        <p class="modal-role">ক্যাশিয়ার • মালি বাড়ি সরদারপাড়া জামে মসজিদ</p>
+        <div class="modal-bio">
+          <p>মসজিদ পরিচালনা পর্ষদের ক্যাশিয়ার। মসজিদের আর্থিক লেনদেন ও হিসাব রক্ষণের দায়িত্বে আছেন।</p>
+        </div>
+        <div class="modal-details">
+          <div class="modal-detail">
+            <span class="modal-detail-icon">📞</span>
+            <div>
+              <p class="modal-detail-label">মোবাইল নম্বর</p>
+              <p class="modal-detail-value">০১৭৪২-৩২৪২৪৭</p>
+            </div>
+          </div>
+          <div class="modal-detail">
+            <span class="modal-detail-icon">📍</span>
+            <div>
+              <p class="modal-detail-label">ঠিকানা</p>
+              <p class="modal-detail-value">মৌজা মালি বাড়ি সরদারপাড়া, গাইবান্ধা সদর, লক্ষীপুর</p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <a href="tel:01742324247" class="modal-btn modal-btn-call">📞 ফোন করুন</a>
+          <a href="https://wa.me/8801742324247" class="modal-btn modal-btn-wa" target="_blank">💬 হোয়াটসঅ্যাপ</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- খতিব Modal -->
+    <div class="modal-overlay" id="modal-3" onclick="closeModal(event, 3)">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-handle"></div>
+        <button class="modal-close" onclick="closeModalDirect(3)">✕</button>
+        <div class="modal-avatar" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">📖</div>
+        <h3 class="modal-name">মাওলানা মো: কারী মোজাফফর হোসেন</h3>
+        <p class="modal-role">খতিব • মালি বাড়ি সরদারপাড়া জামে মসজিদ</p>
+        <div class="modal-bio">
+          <p>মালি বাড়ি সরদারপাড়া জামে মসজিদের সম্মানিত খতিব। জুমার ও বিশেষ নামাজের খুতবা প্রদান করেন। কুরআন হাফেজ ও মুসল্লিদের হৃদয় স্পর্শকারী বক্তা।</p>
+        </div>
+        <div class="modal-details">
+          <div class="modal-detail">
+            <span class="modal-detail-icon">📍</span>
+            <div>
+              <p class="modal-detail-label">মসজিদ</p>
+              <p class="modal-detail-value">মালি বাড়ি সরদারপাড়া জামে মসজিদ</p>
+            </div>
+          </div>
+          <div class="modal-detail">
+            <span class="modal-detail-icon">📞</span>
+            <div>
+              <p class="modal-detail-label">যোগাযোগ</p>
+              <p class="modal-detail-value">মসজিদে সরাসরি যোগাযোগ করুন</p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <a href="tel:01700000000" class="modal-btn modal-btn-call">📞 মসজিদে কল</a>
+          <a href="https://wa.me/8801700000000" class="modal-btn modal-btn-wa" target="_blank">💬 হোয়াটসঅ্যাপ</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── JavaScript ── -->
+    <script>
+      // Update date
+      const now = new Date();
+      const bengaliDays = ['রবিবার','সোমবার','মঙ্গলবার','বুধবার','বৃহস্পতিবার','শুক্রবার','শনিবার'];
+      const bengaliMonths = ['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
+      document.getElementById('headerDate').textContent =
+        bengaliDays[now.getDay()] + ', ' + now.getDate() + ' ' +
+        bengaliMonths[now.getMonth()] + ' ' + now.getFullYear();
+
+      // Modal functions
+      function openModal(index) {
+        document.getElementById('modal-' + index).classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+      function closeModal(event, index) {
+        if (event.target === event.currentTarget) {
+          closeModalDirect(index);
+        }
+      }
+      function closeModalDirect(index) {
+        document.getElementById('modal-' + index).classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      // Close modal on Escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          for (let i = 0; i < 4; i++) {
+            closeModalDirect(i);
+          }
+        }
+      });
+    </script>
+
+  </body>
+</html>
