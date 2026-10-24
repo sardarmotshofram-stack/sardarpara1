@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="bn" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mujahid Agro সমিতি</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Bengali -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- jsPDF & html2canvas for PDF Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#121212',
+                        cardBg: '#1e1e1e',
+                        cardBorder: '#2d2d2d',
+                        accentBtn: '#333333',
+                        brandPrimary: '#10b981'
+                    },
+                    fontFamily: {
+                        sans: ['Hind Siliguri', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        /* Custom Mobile Scrollbar */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        .glass-bottom {
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(12px);
+        }
+        @media print {
+            body { background: #fff; color: #000; }
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between pb-24">
+
+    <!-- TOP BAR / HEADER -->
+    <header class="sticky top-0 z-40 bg-[#181818] border-b border-[#2a2a2a] px-4 py-3 flex justify-between items-center shadow-lg no-print">
+        <div class="flex items-center gap-2">
+            <button class="text-gray-300 hover:text-white p-1">
+                <i class="fa-solid fa-chevron-left text-lg"></i>
+            </button>
+            <div class="flex items-center gap-2 cursor-pointer" onclick="toggleRoleModal()">
+                <!-- Logo Avatar -->
+                <div class="w-8 h-8 rounded-full bg-emerald-600/30 text-emerald-400 border border-emerald-500/40 flex items-center justify-center font-bold text-sm">
+                    M
+                </div>
+                <h1 class="text-base font-bold text-white flex items-center gap-1.5">
+                    Mujahid Agro সমিতি <i class="fa-solid fa-chevron-down text-xs text-gray-400"></i>
+                </h1>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <span id="roleBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-gray-800 text-amber-400 font-medium border border-amber-500/30">
+                ভিউয়ার
+            </span>
+            <button onclick="toggleRoleModal()" class="bg-[#00e5ff] text-black font-extrabold text-xs px-3.5 py-1.5 rounded-full shadow hover:brightness-110 transition">
+                Publish
+            </button>
+        </div>
+    </header>
+
+    <!-- CONTENT WRAPPER -->
+    <main class="px-4 py-4 space-y-4 max-w-lg mx-auto w-full">
+
+        <!-- SECTION TITLE & ACTION BUTTONS -->
+        <div class="space-y-3 no-print">
+            <div class="flex justify-between items-center">
+                <h2 class="text-2xl font-black text-white tracking-tight">সারসংক্ষেপ</h2>
+                <!-- PDF Report Export Button -->
+                <button onclick="downloadFullPDFReport()" class="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/40 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow transition">
+                    <i class="fa-solid fa-file-pdf text-sm"></i>
+                    <span>পিডিএফ রিপোর্ট</span>
+                </button>
+            </div>
+
+            <!-- Action Buttons Bar -->
+            <div class="grid grid-cols-2 gap-2.5">
+                <button onclick="openFarmTxModal()" class="bg-[#2a2a2a] hover:bg-[#333] text-gray-200 border border-[#383838] font-semibold py-3 px-3 rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm transition active:scale-95">
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xs text-gray-400"></i>
+                    <span>খামার লেনদেন</span>
+                </button>
+
+                <button onclick="openDepositModal()" class="bg-[#383838] hover:bg-[#444] text-white border border-[#4a4a4a] font-semibold py-3 px-3 rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm transition active:scale-95">
+                    <i class="fa-solid fa-plus text-xs text-emerald-400"></i>
+                    <span>সঞ্চয় জমা করুন</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- DASHBOARD STAT CARDS -->
+        <div id="tabOverview" class="space-y-3">
+
+            <!-- Card 1: Total Registered Members -->
+            <div class="bg-[#1e1e1e] border border-[#2d2d2d] rounded-2xl p-4 flex justify-between items-start shadow-md">
+                <div class="space-y-1">
+                    <p class="text-xs font-semibold text-gray-400">মোট নিবন্ধিত সদস্য</p>
+                    <p id="cardTotalMembers" class="text-3xl font-black text-white">৫০</p>
+                </div>
+                <div class="text-gray-400 text-lg">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+            </div>
+
+            <!-- Card 2: Total Savings Collected -->
+            <div class="bg-[#1e1e1e] border border-[#2d2d2d] rounded-2xl p-4 flex justify-between items-start shadow-md">
+                <div class="space-y-1">
+                    <p class="text-xs font-semibold text-gray-400">মোট সঞ্চয় সংগ্রহ</p>
+                    <p id="cardTotalSavings" class="text-3xl font-black text-white">৩,০৫০.০০৳</p>
+                </div>
+                <div class="text-gray-400 text-lg">
+                    <i class="fa-solid fa-coins"></i>
+                </div>
+            </div>
+
+            <!-- Card 3: Total Farm Income -->
+            <div class="bg-[#1e1e1e] border border-[#2d2d2d] rounded-2xl p-4 flex justify-between items-start shadow-md">
+                <div class="space-y-1">
+                    <p class="text-xs font-semibold text-gray-400">খামারের মোট আয়</p>
+                    <p id="cardFarmIncome" class="text-3xl font-black text-white">০.০০৳</p>
+                </div>
+                <div class="text-gray-400 text-lg">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </div>
+            </div>
+
+            <!-- Card 4: Total Farm Expense -->
+            <div class="bg-[#1e1e1e] border border-[#2d2d2d] rounded-2xl p-4 flex justify-between items-start shadow-md">
+                <div class="space-y-1">
+                    <p class="text-xs font-semibold text-gray-400">খামারের মোট ব্যয়</p>
+                    <p id="cardFarmExpense" class="text-3xl font-black text-white">০.০০৳</p>
+                </div>
+                <div class="text-gray-400 text-lg">
+                    <i class="fa-solid fa-arrow-down-right-from-square"></i>
+                </div>
+            </div>
+
+            <!-- Card 5: Total Loan Active -->
+            <div class="bg-[#1e1e1e] border border-[#2d2d2d] rounded-2xl p-4 flex justify-between items-start shadow-md">
+                <div class="space-y-1">
+                    <p class="text-xs font-semibold text-gray-400">বিতরণকৃত অবশিষ্ট ঋণ</p>
+                    <p id="cardTotalLoans" class="text-3xl font-black text-amber-400">০.০০৳</p>
+                </div>
+                <div class="text-amber-400 text-lg">
+                    <i class="fa-solid fa-hand-holding-dollar"></i>
+                </div>
+            </div>
+
+            <!-- Quick Export PDF Section inside Overview -->
+            <div class="pt-2 no-print">
+                <button onclick="downloadFullPDFReport()" class="w-full py-3 bg-[#1e1e1e] hover:bg-[#252525] border border-[#333] text-gray-200 font-bold rounded-2xl text-xs flex items-center justify-center gap-2 shadow">
+                    <i class="fa-solid fa-download text-emerald-400"></i>
+                    <span>সম্পূর্ণ সমিতির হিসাব বিবরণী (PDF ডাউনলোড)</span>
+                </button>
+            </div>
+
+        </div>
+
+        <!-- TAB: MEMBER DIRECTORY -->
+        <div id="tabMembers" class="hidden space-y-3">
+            <div class="flex justify-between items-center gap-2">
+                <h3 class="text-lg font-bold text-white">সদস্য তালিকা</h3>
+                <div class="flex items-center gap-2">
+                    <button onclick="openEditMemberModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-2.5 py-1.5 rounded-xl flex items-center gap-1 shadow">
+                        <i class="fa-solid fa-user-plus text-xs"></i>
+                        <span>+ নতুন</span>
+                    </button>
+                    <input type="text" id="memberSearch" onkeyup="filterMembers()" placeholder="খুঁজুন..." class="bg-[#1e1e1e] border border-[#333] px-3 py-1.5 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500 w-28 sm:w-36">
+                </div>
+            </div>
+            
+            <div id="memberListContainer" class="space-y-2">
+                <!-- Member items injected dynamically -->
+            </div>
+        </div>
+
+        <!-- TAB: SAVINGS LOG -->
+        <div id="tabSavings" class="hidden space-y-3">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-bold text-white">সঞ্চয় ও কিস্তি হিসাব</h3>
+                <button onclick="downloadSavingsPDF()" class="text-xs bg-[#2a2a2a] text-emerald-400 font-bold px-2.5 py-1.5 rounded-xl border border-emerald-500/30 flex items-center gap-1">
+                    <i class="fa-solid fa-file-pdf"></i> PDF
+                </button>
+            </div>
+            <div id="savingsTxContainer" class="space-y-2">
+                <!-- Tx items injected dynamically -->
+            </div>
+        </div>
+
+        <!-- TAB: FARM ACCOUNTING -->
+        <div id="tabFarm" class="hidden space-y-3">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-bold text-white">খামারের আয়-ব্যয় খাতা</h3>
+                <div class="flex gap-2">
+                    <button onclick="downloadFarmPDF()" class="text-xs bg-[#2a2a2a] text-cyan-400 font-bold px-2.5 py-1.5 rounded-xl border border-cyan-500/30 flex items-center gap-1">
+                        <i class="fa-solid fa-file-pdf"></i> PDF
+                    </button>
+                    <button onclick="openFarmTxModal()" class="text-xs bg-cyan-600 hover:bg-cyan-500 text-white font-bold px-3 py-1.5 rounded-xl">+ এন্ট্রি দিন</button>
+                </div>
+            </div>
+            <div id="farmTxContainer" class="space-y-2">
+                <!-- Farm items injected dynamically -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- HIDDEN PDF REPORT PRINT TEMPLATE -->
+    <div id="pdfPrintArea" class="hidden p-8 bg-white text-black font-sans space-y-6">
+        <div class="text-center border-b pb-4">
+            <h1 class="text-2xl font-black text-gray-900">Mujahid Agro সমিতি</h1>
+            <p class="text-xs text-gray-600">ডিজিটাল হিসাব ও সঞ্চয় বিবরণী রিপোর্ট</p>
+            <p id="pdfPrintDate" class="text-xs text-gray-500 mt-1"></p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 text-xs bg-gray-100 p-4 rounded-xl">
+            <div>
+                <p><strong>মোট সদস্য:</strong> <span id="pdfTotalMembers">0</span> জন</p>
+                <p><strong>মোট সঞ্চয় সংগ্রহ:</strong> <span id="pdfTotalSavings">0</span>৳</p>
+            </div>
+            <div>
+                <p><strong>খামারের মোট আয়:</strong> <span id="pdfFarmIncome">0</span>৳</p>
+                <p><strong>খামারের মোট ব্যয়:</strong> <span id="pdfFarmExpense">0</span>৳</p>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="font-bold text-sm mb-2 text-gray-800 border-b pb-1">সদস্য সমূহের তালিকা ও সঞ্চয় বিবরণী</h3>
+            <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="p-2 border">কোড</th>
+                        <th class="p-2 border">নাম</th>
+                        <th class="p-2 border">মোবাইল নম্বর</th>
+                        <th class="p-2 border">মোট সঞ্চয়</th>
+                        <th class="p-2 border">অবশিষ্ট ঋণ</th>
+                    </tr>
+                </thead>
+                <tbody id="pdfTableBody">
+                    <!-- Dynamic rows -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- FLOATING DIGITAL KHATA BAR & BOTTOM NAVIGATION -->
+    <div class="fixed bottom-0 left-0 right-0 z-40 glass-bottom border-t border-[#2a2a2a] max-w-lg mx-auto no-print">
+        
+        <!-- Header Text inside Bottom Navigation Bar -->
+        <div class="pt-2 px-5 pb-1">
+            <p class="text-sm font-bold text-white tracking-wide">ডিজিটাল সমিতি খাতা</p>
+        </div>
+
+        <!-- Bottom Tabs Icon Bar -->
+        <div class="grid grid-cols-4 px-2 pb-2 pt-1 text-center">
+            
+            <!-- Tab 1: Overview -->
+            <button onclick="switchTab('overview')" id="navOverview" class="flex flex-col items-center justify-center py-1.5 px-3 rounded-2xl bg-[#333333] text-white transition">
+                <i class="fa-solid fa-border-all text-base mb-1"></i>
+                <span class="text-[11px] font-semibold">সারসংক্ষেপ</span>
+            </button>
+
+            <!-- Tab 2: Members -->
+            <button onclick="switchTab('members')" id="navMembers" class="flex flex-col items-center justify-center py-1.5 px-3 rounded-2xl text-gray-400 hover:text-white transition">
+                <i class="fa-solid fa-users text-base mb-1"></i>
+                <span class="text-[11px] font-semibold">সদস্য</span>
+            </button>
+
+            <!-- Tab 3: Savings -->
+            <button onclick="switchTab('savings')" id="navSavings" class="flex flex-col items-center justify-center py-1.5 px-3 rounded-2xl text-gray-400 hover:text-white transition">
+                <i class="fa-solid fa-piggy-bank text-base mb-1"></i>
+                <span class="text-[11px] font-semibold">সঞ্চয়</span>
+            </button>
+
+            <!-- Tab 4: Farm -->
+            <button onclick="switchTab('farm')" id="navFarm" class="flex flex-col items-center justify-center py-1.5 px-3 rounded-2xl text-gray-400 hover:text-white transition">
+                <i class="fa-solid fa-wheat-awn text-base mb-1"></i>
+                <span class="text-[11px] font-semibold">খামার</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- FLOATING CHAT / HELP BUTTON -->
+    <button onclick="switchTab('savings')" class="fixed bottom-20 right-4 z-40 w-12 h-12 rounded-full bg-white text-black shadow-xl flex items-center justify-center text-xl hover:scale-105 active:scale-95 transition no-print">
+        <i class="fa-solid fa-receipt"></i>
+    </button>
+
+    <!-- MODAL 1: SAVINGS DEPOSIT MODAL -->
+    <div id="depositModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 no-print">
+        <div class="bg-[#1e1e1e] border border-[#333] w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 space-y-4 text-white">
+            <div class="flex justify-between items-center border-b border-[#333] pb-3">
+                <h3 class="text-base font-bold text-emerald-400 flex items-center gap-2">
+                    <i class="fa-solid fa-plus-circle"></i> সঞ্চয় ও কিস্তি জমা
+                </h3>
+                <button onclick="closeDepositModal()" class="text-gray-400 text-xl"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form onsubmit="submitDeposit(event)" class="space-y-3.5">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">সদস্য নির্বাচন করুন *</label>
+                    <select id="depMemberSelect" class="w-full p-3 bg-[#121212] border border-[#333] rounded-xl text-sm text-white outline-none focus:border-emerald-500" required></select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">লেনদেনের ধরন *</label>
+                    <select id="depType" class="w-full p-3 bg-[#121212] border border-[#333] rounded-xl text-sm text-white outline-none">
+                        <option value="savings">সাধারণ সঞ্চয় জমা</option>
+                        <option value="loanRepay">ঋণের কিস্তি শোধ</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">টাকার পরিমাণ (৳) *</label>
+                    <input type="number" id="depAmount" min="10" placeholder="যেমন: ৫০০" class="w-full p-3 bg-[#121212] border border-[#333] rounded-xl text-sm text-white outline-none focus:border-emerald-500" required>
+                </div>
+
+                <div class="flex items-center gap-2 pt-1">
+                    <input type="checkbox" id="depSendSms" class="w-4 h-4 accent-emerald-500 rounded" checked>
+                    <label for="depSendSms" class="text-xs font-medium text-gray-300">WhatsApp / SMS-এ সরাসরি রশিদ পাঠান</label>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl shadow-lg transition active:scale-95">
+                    জমা নিশ্চিত করুন
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 2: EDIT / ADD MEMBER MODAL -->
+    <div id="editMemberModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 no-print">
+        <div class="bg-[#1e1e1e] border border-[#333] w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 space-y-4 text-white">
+            <div class="flex justify-between items-center border-b border-[#333] pb-3">
+                <h3 id="memberModalTitle" class="text-base font-bold text-emerald-400 flex items-center gap-2">
+                    <i class="fa-solid fa-user-pen"></i> সদস্য সম্পাদনা
+                </h3>
+                <button onclick="closeEditMemberModal()" class="text-gray-400 text-xl"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form onsubmit="saveMemberDetails(event)" class="space-y-3">
+                <input type="hidden" id="editMemberId">
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">সদস্য কোড / আইডি</label>
+                    <input type="text" id="editMemberCode" class="w-full p-2.5 bg-[#121212] border border-[#333] rounded-xl text-sm text-gray-300 outline-none" readonly>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">সদস্যের নাম *</label>
+                    <input type="text" id="editMemberName" placeholder="নাম লিখুন" class="w-full p-2.5 bg-[#121212] border border-[#333] rounded-xl text-sm text-white outline-none focus:border-emerald-500" required>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">মোবাইল নম্বর *</label>
+                    <input type="tel" id="editMemberPhone" placeholder="017xxxxxxxx" class="w-full p-2.5 bg-[#121212] border border-[#333] rounded-xl text-sm text-white outline-none focus:border-emerald-500" required>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 mb-1">বর্তমান সঞ্চয় (৳)</label>
+                        <input type="number" id="editMemberSavings" class="w-full p-2.5 bg-[#121212] border border-[#333] rounded-xl text-sm text-white outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 mb-1">অবশিষ্ট ঋণ (৳)</label>
+                        <input type="number" id="editMemberLoan" class="w-full p-2.5 bg-[#121212] border border-[#333] rounded-xl text-sm text-white outline-none">
+                    </div>
+                </div>
+
+                <div class="flex gap-2 pt-2">
+                    <button type="button" id="btnDeleteMember" onclick="deleteCurrentMember()" class="w-1/3 py-3 bg-red-600/30 border border-red-500/40 text-red-300 hover:bg-red-600 hover:text-white font-bold rounded-xl text-xs transition">
+                        মুছে ফেলুন
+                    </button>
+                    <button type="submit" class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs shadow transition">
+                        সেভ করুন
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 3: FARM TRANSACTION MODAL -->
+    <div id="farmTxModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 no-print">
+        <div class="bg-[#1e1e1e] border border-[#333] w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 space-y-4 text-white">
+            <div class="flex justify-between items-center border-b border-[#333] pb-3">
+                <h3 class="text-base font-bold text-cyan-400 flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> খামার আয় / ব্যয় এন্ট্রি
+                </h3>
+                <button onclick="closeFarmTxModal()" class="text-gray-400 text-xl"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form onsubmit="submitFarmTx(event)" class="space-y-3.5">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">লেনদেনের ধরন *</label>
+                    <select id="farmType" class="w-full p-3 bg-[#121212] border border-[#333] rounded-xl text-sm text-white outline-none">
+                        <option value="income">খামারের আয় (বিক্রি/লাভ)</option>
+                        <option value="expense">খামারের ব্যয় (খাবার/ওষুধ/খরচ)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">বিবরণ / খাত *</label>
+                    <input type="text" id="farmTitle" placeholder="যেমন: মুরগি বিক্রি / দানাদার খাবার ক্রয়" class="w-full p-3 bg-[#121212] border border-[#333] rounded-xl text-sm text-white outline-none focus:border-cyan-500" required>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">টাকার পরিমাণ (৳) *</label>
+                    <input type="number" id="farmAmount" min="1" placeholder="যেমন: ১৫০০" class="w-full p-3 bg-[#121212] border border-[#333] rounded-xl text-sm text-white outline-none focus:border-cyan-500" required>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-xl shadow-lg transition active:scale-95">
+                    সেভ করুন
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 4: ADMIN PIN MODAL -->
+    <div id="pinModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 no-print">
+        <div class="bg-[#1e1e1e] border border-[#333] rounded-3xl max-w-xs w-full p-6 text-center space-y-4 text-white">
+            <div class="w-14 h-14 bg-amber-500/20 text-amber-400 rounded-2xl flex items-center justify-center text-2xl mx-auto border border-amber-500/30">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold">এডমিন পাসওয়ার্ড</h3>
+                <p class="text-xs text-gray-400 mt-0.5">এডিট বা লেনদেনের জন্য পাসওয়ার্ড দিন</p>
+            </div>
+            <form onsubmit="verifyAdminPin(event)" class="space-y-3">
+                <input type="password" id="adminPinInput" placeholder="পাসওয়ার্ড লিখুন" class="w-full text-center text-lg font-bold p-3 bg-[#121212] border border-[#333] rounded-2xl text-white outline-none focus:border-amber-500" required>
+                <p id="pinErrorMsg" class="text-xs text-red-400 hidden font-bold">ভুল পাসওয়ার্ড!</p>
+                <div class="flex gap-2">
+                    <button type="button" onclick="closePinModal()" class="w-1/2 py-2.5 bg-[#2a2a2a] text-gray-300 font-bold rounded-xl text-xs">বাতিল</button>
+                    <button type="submit" class="w-1/2 py-2.5 bg-amber-500 text-black font-bold rounded-xl text-xs">লগইন</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT APP LOGIC -->
+    <script>
+        // App State
+        let isAdmin = false;
+        const ADMIN_PIN = "Azad71*#";
+
+        const defaultNames = [
+            "আব্দুল করিম", "রহিম মিঞা", "মো: রফিকুল ইসলাম", "কামাল হোসেন", "শফিকুল আলম", 
+            "মোঃ জসিম উদ্দিন", "নুরুল ইসলাম", "শাহ আলম", "তারেক রহমান", "ফারুক হোসেন",
+            "আরিফুল ইসলাম", "রেহানা পারভীন", "সেলিম রেজা", "মোঃ আনোয়ার হোসেন", "সুলতানা বেগম",
+            "মোঃ বিল্লাল হোসেন", "মাহাবুব আলম", "জাহাঙ্গীর আলম", "জহিরুল ইসলাম", "মোসাঃ পারভীন আক্তার",
+            "মো: হাবিবুর রহমান", "নাসির উদ্দিন", "মাসুদ রানা", "আজহারুল ইসলাম", "শাহিনুর রহমান",
+            "আলমগীর হোসেন", "মোকসেদুল ইসলাম", "মোঃ সোলাইমান", "আকমল হোসেন", "সাদেকুর রহমান",
+            "মোঃ মজনু মিয়া", "আমির হোসেন", "কাজী রফিকুল ইসলাম", "মোঃ মনির হোসেন", "শহিদুল ইসলাম",
+            "মোসাঃ খাদিজা বেগম", "মোঃ আলতাফ হোসেন", "সাইফুল ইসলাম", "মো: ইলিয়াস হোসেন", "দেলোয়ার হোসেন",
+            "আবুল কালাম", "মোঃ মোস্তফা", "আব্দুস সাত্তার", "মোছাঃ শাহানাজ বেগম", "মোঃ মিজানুর রহমান",
+            "মোঃ হারুন অর রশিদ", "মোঃ জাকির হোসেন", "মো: জিয়াউর রহমান", "মোঃ কবির হোসেন", "মুজাহিদ ইসলাম"
+        ];
+
+        let membersData = [];
+        let savingsData = [];
+        let farmData = [];
+
+        function initApp() {
+            const storedMembers = localStorage.getItem('mujahid_agro_members');
+            if (!storedMembers) {
+                membersData = [];
+                for (let i = 1; i <= 50; i++) {
+                    const code = `M-${100 + i}`;
+                    membersData.push({
+                        id: code,
+                        memberNo: i,
+                        code: code,
+                        name: defaultNames[i - 1],
+                        phone: `01710${100000 + i}`,
+                        savings: i === 1 ? 2000 : (i === 2 ? 1050 : 0),
+                        loan: 0
+                    });
+                }
+                saveMembersToStorage();
+            } else {
+                try {
+                    membersData = JSON.parse(storedMembers);
+                } catch(e) {
+                    membersData = [];
+                }
+            }
+
+            const storedSavings = localStorage.getItem('mujahid_agro_savings');
+            savingsData = storedSavings ? JSON.parse(storedSavings) : [
+                {
+                    memberCode: 'M-101',
+                    memberName: 'আব্দুল করিম',
+                    type: 'সাধারণ সঞ্চয়',
+                    amount: 2000,
+                    dateStr: new Date().toLocaleDateString('bn-BD')
+                },
+                {
+                    memberCode: 'M-102',
+                    memberName: 'রহিম মিঞা',
+                    type: 'সাধারণ সঞ্চয়',
+                    amount: 1050,
+                    dateStr: new Date().toLocaleDateString('bn-BD')
+                }
+            ];
+
+            const storedFarm = localStorage.getItem('mujahid_agro_farm');
+            farmData = storedFarm ? JSON.parse(storedFarm) : [];
+
+            updateAllDataViews();
+        }
+
+        function saveMembersToStorage() {
+            localStorage.setItem('mujahid_agro_members', JSON.stringify(membersData));
+        }
+
+        function saveSavingsToStorage() {
+            localStorage.setItem('mujahid_agro_savings', JSON.stringify(savingsData));
+        }
+
+        function saveFarmToStorage() {
+            localStorage.setItem('mujahid_agro_farm', JSON.stringify(farmData));
+        }
+
+        function toBnDigits(n) {
+            if (n === undefined || n === null) return '০';
+            const bn = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+            return n.toString().replace(/\d/g, d => bn[d]);
+        }
+
+        function formatMoneyBn(val) {
+            const num = parseFloat(val) || 0;
+            const formatted = num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            return toBnDigits(formatted) + '৳';
+        }
+
+        function updateOverviewCards() {
+            const totalMembers = membersData.length;
+            const totalSavings = membersData.reduce((acc, m) => acc + (m.savings || 0), 0);
+            const totalLoans = membersData.reduce((acc, m) => acc + (m.loan || 0), 0);
+
+            const farmIncome = farmData.filter(f => f.type === 'income').reduce((acc, f) => acc + f.amount, 0);
+            const farmExpense = farmData.filter(f => f.type === 'expense').reduce((acc, f) => acc + f.amount, 0);
+
+            document.getElementById('cardTotalMembers').innerText = toBnDigits(totalMembers);
+            document.getElementById('cardTotalSavings').innerText = formatMoneyBn(totalSavings);
+            document.getElementById('cardFarmIncome').innerText = formatMoneyBn(farmIncome);
+            document.getElementById('cardFarmExpense').innerText = formatMoneyBn(farmExpense);
+            document.getElementById('cardTotalLoans').innerText = formatMoneyBn(totalLoans);
+        }
+
+        function renderMemberList() {
+            const container = document.getElementById('memberListContainer');
+            if(!container) return;
+            container.innerHTML = '';
+            membersData.forEach(m => {
+                const item = document.createElement('div');
+                item.className = "bg-[#1e1e1e] border border-[#2d2d2d] rounded-2xl p-3.5 flex justify-between items-center";
+                item.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold flex items-center justify-center text-xs">
+                            ${m.code}
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-white flex items-center gap-1.5">
+                                ${m.name}
+                                ${isAdmin ? `<button onclick="openEditMemberModal('${m.id}')" class="text-gray-400 hover:text-emerald-400 text-xs p-1"><i class="fa-solid fa-pen-to-square"></i></button>` : ''}
+                            </p>
+                            <p class="text-[11px] text-gray-400 flex items-center gap-1">
+                                ${m.phone}
+                                <button onclick="sendDirectSms('${m.phone}', '${m.name}', ${m.savings || 0})" class="text-emerald-400 text-xs hover:scale-110 ml-1"><i class="fa-brands fa-whatsapp"></i></button>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-emerald-400 font-bold">${formatMoneyBn(m.savings || 0)}</p>
+                        ${m.loan > 0 ? `<p class="text-[10px] text-amber-400 font-semibold">ঋণ: ${formatMoneyBn(m.loan)}</p>` : ''}
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function renderSavingsList() {
+            const container = document.getElementById('savingsTxContainer');
+            if(!container) return;
+            container.innerHTML = '';
+            if (savingsData.length === 0) {
+                container.innerHTML = `<p class="text-center text-xs text-gray-500 py-6">এখনো কোনো জমা হয়নি</p>`;
+                return;
+            }
+            savingsData.forEach((s, idx) => {
+                const item = document.createElement('div');
+                item.className = "bg-[#1e1e1e] border border-[#2d2d2d] rounded-2xl p-3.5 flex justify-between items-center";
+                item.innerHTML = `
+                    <div>
+                        <p class="text-sm font-bold text-white">${s.memberName} <span class="text-xs text-gray-400">(${s.memberCode})</span></p>
+                        <p class="text-[10px] text-gray-400">${s.dateStr}</p>
+                    </div>
+                    <div class="text-right flex items-center gap-3">
+                        <div>
+                            <p class="text-sm font-bold text-emerald-400">+${formatMoneyBn(s.amount)}</p>
+                            <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 font-semibold border border-emerald-800/40">${s.type}</span>
+                        </div>
+                        <button onclick="resendTxSms(${idx})" class="w-8 h-8 rounded-full bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-sm hover:bg-emerald-600 hover:text-white transition">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function renderFarmList() {
+            const container = document.getElementById('farmTxContainer');
+            if(!container) return;
+            container.innerHTML = '';
+            if (farmData.length === 0) {
+                container.innerHTML = `<p class="text-center text-xs text-gray-500 py-6">খামারের কোনো লেনদেন রেকর্ড করা হয়নি</p>`;
+                return;
+            }
+            farmData.forEach(f => {
+                const item = document.createElement('div');
+                item.className = "bg-[#1e1e1e] border border-[#2d2d2d] rounded-2xl p-3.5 flex justify-between items-center";
+                item.innerHTML = `
+                    <div>
+                        <p class="text-sm font-bold text-white">${f.title}</p>
+                        <p class="text-[10px] text-gray-400">${f.dateStr}</p>
+                    </div>
+                    <p class="text-sm font-bold ${f.type === 'income' ? 'text-cyan-400' : 'text-red-400'}">
+                        ${f.type === 'income' ? '+' : '-'}${formatMoneyBn(f.amount)}
+                    </p>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function populateDropdowns() {
+            const select = document.getElementById('depMemberSelect');
+            if(!select) return;
+            select.innerHTML = '';
+            membersData.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m.id;
+                opt.innerText = `[${m.code}] ${m.name}`;
+                select.appendChild(opt);
+            });
+        }
+
+        function updateAllDataViews() {
+            updateOverviewCards();
+            renderMemberList();
+            renderSavingsList();
+            renderFarmList();
+            populateDropdowns();
+        }
+
+        // WhatsApp & SMS Messaging Helper (Fixed for WebView and In-App Browsers)
+        window.sendWhatsAppMessage = function(phone, message) {
+            let cleanPhone = phone.replace(/[^0-9]/g, '');
+            if (cleanPhone.startsWith('0')) {
+                cleanPhone = '88' + cleanPhone;
+            }
+            const encodedMsg = encodeURIComponent(message);
+            
+            // Standard universal web URL compatible with all in-app webviews & mobile browsers
+            const waUrl = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodedMsg}`;
+            
+            // Attempt opening WhatsApp in a new tab/window
+            try {
+                const newWin = window.open(waUrl, '_blank');
+                if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
+                    window.location.href = waUrl;
+                }
+            } catch (err) {
+                // Fallback direct location update if popup blocked
+                window.location.href = waUrl;
+            }
+        };
+
+        window.sendDirectSms = function(phone, name, savings) {
+            const msg = `প্রিয় ${name}, আপনার Mujahid Agro সমিতি একাউন্টে বর্তমান মোট জমা: ${savings}৳। ধন্যবাদ!`;
+            sendWhatsAppMessage(phone, msg);
+        };
+
+        window.resendTxSms = function(idx) {
+            const tx = savingsData[idx];
+            if (!tx) return;
+            const member = membersData.find(m => m.code === tx.memberCode) || { phone: '01700000000' };
+            const msg = `প্রিয় ${tx.memberName} (${tx.memberCode}), আপনার ${tx.type} বাবদ ৳${tx.amount} জমা নিশ্চিত করা হয়েছে। তারিখ: ${tx.dateStr}। ধন্যবাদ, Mujahid Agro সমিতি।`;
+            sendWhatsAppMessage(member.phone, msg);
+        };
+
+        // Member Editing Functions
+        window.openEditMemberModal = function(id = null) {
+            if (!isAdmin) {
+                toggleRoleModal();
+                return;
+            }
+
+            if (id) {
+                const member = membersData.find(m => m.id === id);
+                if (!member) return;
+                document.getElementById('memberModalTitle').innerText = 'সদস্য তথ্য এডিট করুন';
+                document.getElementById('editMemberId').value = member.id;
+                document.getElementById('editMemberCode').value = member.code;
+                document.getElementById('editMemberName').value = member.name;
+                document.getElementById('editMemberPhone').value = member.phone;
+                document.getElementById('editMemberSavings').value = member.savings || 0;
+                document.getElementById('editMemberLoan').value = member.loan || 0;
+                document.getElementById('btnDeleteMember').classList.remove('hidden');
+            } else {
+                const newNo = membersData.length + 1;
+                const newCode = `M-${100 + newNo}`;
+                document.getElementById('memberModalTitle').innerText = '+ নতুন সদস্য যোগ করুন';
+                document.getElementById('editMemberId').value = '';
+                document.getElementById('editMemberCode').value = newCode;
+                document.getElementById('editMemberName').value = '';
+                document.getElementById('editMemberPhone').value = '';
+                document.getElementById('editMemberSavings').value = 0;
+                document.getElementById('editMemberLoan').value = 0;
+                document.getElementById('btnDeleteMember').classList.add('hidden');
+            }
+
+            document.getElementById('editMemberModal').classList.remove('hidden');
+        };
+
+        window.closeEditMemberModal = function() {
+            document.getElementById('editMemberModal').classList.add('hidden');
+        };
+
+        window.saveMemberDetails = function(e) {
+            e.preventDefault();
+            const id = document.getElementById('editMemberId').value;
+            const code = document.getElementById('editMemberCode').value;
+            const name = document.getElementById('editMemberName').value.trim();
+            const phone = document.getElementById('editMemberPhone').value.trim();
+            const savings = parseFloat(document.getElementById('editMemberSavings').value) || 0;
+            const loan = parseFloat(document.getElementById('editMemberLoan').value) || 0;
+
+            if (id) {
+                const member = membersData.find(m => m.id === id);
+                if (member) {
+                    member.name = name;
+                    member.phone = phone;
+                    member.savings = savings;
+                    member.loan = loan;
+                }
+            } else {
+                membersData.push({
+                    id: code,
+                    memberNo: membersData.length + 1,
+                    code: code,
+                    name: name,
+                    phone: phone,
+                    savings: savings,
+                    loan: loan
+                });
+            }
+
+            saveMembersToStorage();
+            updateAllDataViews();
+            closeEditMemberModal();
+        };
+
+        window.deleteCurrentMember = function() {
+            const id = document.getElementById('editMemberId').value;
+            if (!id) return;
+            if (confirm('আপনি কি নিশ্চিত যে এই সদস্যকে মুছে ফেলতে চান?')) {
+                membersData = membersData.filter(m => m.id !== id);
+                saveMembersToStorage();
+                updateAllDataViews();
+                closeEditMemberModal();
+            }
+        };
+
+        // PDF Generation Functions
+        window.downloadFullPDFReport = function() {
+            document.getElementById('pdfPrintDate').innerText = 'তারিখ: ' + new Date().toLocaleDateString('bn-BD');
+            document.getElementById('pdfTotalMembers').innerText = toBnDigits(membersData.length);
+            document.getElementById('pdfTotalSavings').innerText = toBnDigits(membersData.reduce((a, m) => a + (m.savings || 0), 0));
+            document.getElementById('pdfFarmIncome').innerText = toBnDigits(farmData.filter(f=>f.type==='income').reduce((a,f)=>a+f.amount,0));
+            document.getElementById('pdfFarmExpense').innerText = toBnDigits(farmData.filter(f=>f.type==='expense').reduce((a,f)=>a+f.amount,0));
+
+            const tableBody = document.getElementById('pdfTableBody');
+            tableBody.innerHTML = '';
+            membersData.forEach(m => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-2 border">${m.code}</td>
+                    <td class="p-2 border">${m.name}</td>
+                    <td class="p-2 border">${m.phone}</td>
+                    <td class="p-2 border">${formatMoneyBn(m.savings || 0)}</td>
+                    <td class="p-2 border">${formatMoneyBn(m.loan || 0)}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+
+            window.print();
+        };
+
+        window.downloadSavingsPDF = function() {
+            downloadFullPDFReport();
+        };
+
+        window.downloadFarmPDF = function() {
+            downloadFullPDFReport();
+        };
+
+        window.switchTab = function(tab) {
+            ['Overview', 'Members', 'Savings', 'Farm'].forEach(t => {
+                const tabEl = document.getElementById(`tab${t}`);
+                if(tabEl) tabEl.classList.add('hidden');
+                const btn = document.getElementById(`nav${t}`);
+                if(btn) btn.className = "flex flex-col items-center justify-center py-1.5 px-3 rounded-2xl text-gray-400 hover:text-white transition";
+            });
+
+            const activeTab = tab.charAt(0).toUpperCase() + tab.slice(1);
+            const targetTab = document.getElementById(`tab${activeTab}`);
+            if(targetTab) targetTab.classList.remove('hidden');
+
+            const activeBtn = document.getElementById(`nav${activeTab}`);
+            if(activeBtn) activeBtn.className = "flex flex-col items-center justify-center py-1.5 px-3 rounded-2xl bg-[#333333] text-white transition";
+        };
+
+        window.openDepositModal = function() {
+            if (!isAdmin) {
+                toggleRoleModal();
+                return;
+            }
+            document.getElementById('depositModal').classList.remove('hidden');
+        };
+        window.closeDepositModal = function() { document.getElementById('depositModal').classList.add('hidden'); };
+
+        window.openFarmTxModal = function() {
+            if (!isAdmin) {
+                toggleRoleModal();
+                return;
+            }
+            document.getElementById('farmTxModal').classList.remove('hidden');
+        };
+        window.closeFarmTxModal = function() { document.getElementById('farmTxModal').classList.add('hidden'); };
+
+        window.toggleRoleModal = function() {
+            if (isAdmin) {
+                isAdmin = false;
+                document.getElementById('roleBadge').innerText = 'ভিউয়ার';
+                document.getElementById('roleBadge').className = 'text-[10px] px-2 py-0.5 rounded-full bg-gray-800 text-amber-400 font-medium border border-amber-500/30';
+                renderMemberList();
+            } else {
+                document.getElementById('pinModal').classList.remove('hidden');
+                document.getElementById('adminPinInput').value = '';
+                document.getElementById('pinErrorMsg').classList.add('hidden');
+            }
+        };
+
+        window.closePinModal = function() { document.getElementById('pinModal').classList.add('hidden'); };
+
+        window.verifyAdminPin = function(e) {
+            e.preventDefault();
+            const pin = document.getElementById('adminPinInput').value;
+            if (pin === ADMIN_PIN) {
+                isAdmin = true;
+                document.getElementById('roleBadge').innerText = 'এডমিন';
+                document.getElementById('roleBadge').className = 'text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 font-medium border border-emerald-500/40';
+                renderMemberList();
+                closePinModal();
+            } else {
+                document.getElementById('pinErrorMsg').classList.remove('hidden');
+            }
+        };
+
+        window.submitDeposit = function(e) {
+            e.preventDefault();
+            const mId = document.getElementById('depMemberSelect').value;
+            const amount = parseFloat(document.getElementById('depAmount').value);
+            const type = document.getElementById('depType').value;
+            const sendSms = document.getElementById('depSendSms').checked;
+
+            const member = membersData.find(m => m.id === mId);
+            if (!member) return;
+
+            const typeTitle = type === 'savings' ? 'সাধারণ সঞ্চয়' : 'ঋণের কিস্তি';
+            if (type === 'savings') {
+                member.savings = (member.savings || 0) + amount;
+            } else {
+                member.loan = Math.max(0, (member.loan || 0) - amount);
+            }
+
+            saveMembersToStorage();
+
+            const now = new Date();
+            const dateStr = now.toLocaleTimeString('bn-BD') + ', ' + now.toLocaleDateString('bn-BD');
+
+            savingsData.unshift({
+                memberCode: member.code,
+                memberName: member.name,
+                type: typeTitle,
+                amount: amount,
+                dateStr: dateStr
+            });
+            saveSavingsToStorage();
+
+            updateAllDataViews();
+            closeDepositModal();
+
+            if (sendSms) {
+                const msg = `প্রিয় ${member.name} (${member.code}), আপনার ${typeTitle} বাবদ ৳${amount} জমার রশিদ সফল হয়েছে। আপনার বর্তমান মোট সঞ্চয়: ৳${member.savings}। ধন্যবাদ, Mujahid Agro সমিতি।`;
+                sendWhatsAppMessage(member.phone, msg);
+            }
+        };
+
+        window.submitFarmTx = function(e) {
+            e.preventDefault();
+            const type = document.getElementById('farmType').value;
+            const title = document.getElementById('farmTitle').value;
+            const amount = parseFloat(document.getElementById('farmAmount').value);
+
+            const now = new Date();
+            const dateStr = now.toLocaleTimeString('bn-BD') + ', ' + now.toLocaleDateString('bn-BD');
+
+            farmData.unshift({
+                type: type,
+                title: title,
+                amount: amount,
+                dateStr: dateStr
+            });
+            saveFarmToStorage();
+
+            updateAllDataViews();
+            closeFarmTxModal();
+        };
+
+        window.filterMembers = function() {
+            const q = document.getElementById('memberSearch').value.toLowerCase().trim();
+            const filtered = membersData.filter(m => m.name.toLowerCase().includes(q) || m.code.toLowerCase().includes(q));
+            
+            const container = document.getElementById('memberListContainer');
+            container.innerHTML = '';
+            filtered.forEach(m => {
+                const item = document.createElement('div');
+                item.className = "bg-[#1e1e1e] border border-[#2d2d2d] rounded-2xl p-3.5 flex justify-between items-center";
+                item.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold flex items-center justify-center text-xs">
+                            ${m.code}
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-white flex items-center gap-1.5">
+                                ${m.name}
+                                ${isAdmin ? `<button onclick="openEditMemberModal('${m.id}')" class="text-gray-400 hover:text-emerald-400 text-xs p-1"><i class="fa-solid fa-pen-to-square"></i></button>` : ''}
+                            </p>
+                            <p class="text-[11px] text-gray-400 flex items-center gap-1">
+                                ${m.phone}
+                                <button onclick="sendDirectSms('${m.phone}', '${m.name}', ${m.savings || 0})" class="text-emerald-400 text-xs hover:scale-110 ml-1"><i class="fa-brands fa-whatsapp"></i></button>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-emerald-400 font-bold">${formatMoneyBn(m.savings || 0)}</p>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initApp();
+        });
+    </script>
+</body>
+</html>
